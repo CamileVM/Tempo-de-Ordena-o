@@ -1,0 +1,68 @@
+import java.util.Arrays;
+
+public class MergeSortBenchmark {
+    public static void main(String[] args) {
+        int[] arr = generateDescendingArray(100000);
+        long totalExecutionTime = 0;
+        int numberOfExecutions = 10;
+
+        for (int i = 0; i < numberOfExecutions; i++) {
+            int[] arrCopy = Arrays.copyOf(arr, arr.length);
+            long startTime = System.nanoTime();
+            mergeSort(arrCopy);
+            long endTime = System.nanoTime();
+            totalExecutionTime += (endTime - startTime);
+        }
+
+        long averageExecutionTime = totalExecutionTime / numberOfExecutions;
+        System.out.println("Average Execution Time (in nanoseconds): " + averageExecutionTime);
+    }
+
+    public static int[] generateDescendingArray(int size) {
+        int[] arr = new int[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = size - i;
+        }
+        return arr;
+    }
+
+    public static void mergeSort(int[] arr) {
+        if (arr.length <= 1) {
+            return;
+        }
+
+        int middle = arr.length / 2;
+        int[] left = Arrays.copyOfRange(arr, 0, middle);
+        int[] right = Arrays.copyOfRange(arr, middle, arr.length);
+
+        mergeSort(left);
+        mergeSort(right);
+
+        merge(arr, left, right);
+    }
+
+    public static void merge(int[] result, int[] left, int[] right) {
+        int i = 0, j = 0, k = 0;
+
+        while (i < left.length && j < right.length) {
+            if (left[i] < right[j]) {
+                result[k++] = left[i++];
+            } else {
+                result[k++] = right[j++];
+            }
+        }
+
+        while (i < left.length) {
+            result[k++] = left[i++];
+        }
+
+        while (j < right.length) {
+            result[k++] = right[j++];
+        }
+    }
+}
+
+
+
+
+--------------------------------------------------------------------
