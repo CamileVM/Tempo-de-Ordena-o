@@ -1,0 +1,78 @@
+import java.util.Arrays;
+import java.util.Random;
+
+public class MergeSortBenchmark {
+
+    public static void main(String[] args) {
+        int numSamples = 100; // Número de repetições
+        int arraySize = 100000; // Tamanho do vetor
+
+        long totalElapsedTime = 0;
+
+        for (int i = 0; i < numSamples; i++) {
+            int[] arr = generateRandomArray(arraySize);
+            long startTime = System.nanoTime();
+            mergeSort(arr);
+            long endTime = System.nanoTime();
+            totalElapsedTime += (endTime - startTime);
+        }
+
+        double averageTime = (double) totalElapsedTime / numSamples / 1e9; // Convertendo para segundos
+
+        System.out.printf("Tempo médio para ordenar %d elementos: %.6f segundos%n", arraySize, averageTime);
+    }
+
+    public static int[] mergeSort(int[] arr) {
+        if (arr.length <= 1) {
+            return arr;
+        }
+
+        int mid = arr.length / 2;
+        int[] left = Arrays.copyOfRange(arr, 0, mid);
+        int[] right = Arrays.copyOfRange(arr, mid, arr.length);
+
+        left = mergeSort(left);
+        right = mergeSort(right);
+
+        return merge(left, right);
+    }
+
+    public static int[] merge(int[] left, int[] right) {
+        int[] result = new int[left.length + right.length];
+        int i = 0, j = 0, k = 0;
+
+        while (i < left.length && j < right.length) {
+            if (left[i] < right[j]) {
+                result[k] = left[i];
+                i++;
+            } else {
+                result[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < left.length) {
+            result[k] = left[i];
+            i++;
+            k++;
+        }
+
+        while (j < right.length) {
+            result[k] = right[j];
+            j++;
+            k++;
+        }
+
+        return result;
+    }
+
+    public static int[] generateRandomArray(int size) {
+        int[] arr = new int[size];
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            arr[i] = random.nextInt(size * 3); // Gerando números aleatórios únicos
+        }
+        return arr;
+    }
+}
