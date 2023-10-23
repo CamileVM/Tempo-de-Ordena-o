@@ -1,0 +1,60 @@
+import java.util.Random;
+
+public class QuickSortBenchmark {
+
+    public static void main(String[] args) {
+        int numSamples = 100; // Número de repetições
+        int arraySize = 100000; // Tamanho do vetor
+        int[] sortedArray = generateSortedArray(arraySize);
+
+        long totalElapsedTime = 0;
+
+        for (int i = 0; i < numSamples; i++) {
+            int[] arr = sortedArray.clone(); // Copia o vetor ordenado
+            long startTime = System.nanoTime();
+            quickSort(arr, 0, arr.length - 1);
+            long endTime = System.nanoTime();
+            totalElapsedTime += (endTime - startTime);
+        }
+
+        double averageTime = (double) totalElapsedTime / numSamples / 1e9; // Convertendo para segundos
+
+        System.out.printf("Tempo médio para ordenar %d elementos: %.6f segundos%n", arraySize, averageTime);
+    }
+
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int partitionIndex = partition(arr, low, high);
+            quickSort(arr, low, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, high);
+        }
+    }
+
+    public static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = (low - 1);
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+        return i + 1;
+    }
+
+    public static int[] generateSortedArray(int size) {
+        int[] arr = new int[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = i;
+        }
+        return arr;
+    }
+}
